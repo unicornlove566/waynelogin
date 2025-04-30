@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 
 // Set your Railway backend URL here — fallback to localhost for development
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://wayneedu-production.up.railway.app";
 
 const LoginForm = ({ loginTitle, setLoginTitle }) => {
   const [username, setUsername] = useState("");
