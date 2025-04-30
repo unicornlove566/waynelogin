@@ -5,6 +5,11 @@ const axios = require('axios');
 const dotenv = require('dotenv');
 dotenv.config();
 
+
+console.log('Starting server...');
+console.log('EMAIL_USER:', process.env.EMAIL_USER);
+console.log('TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN);
+
 const app = express();
 const port = process.env.PORT || 5000; // Use Railway's assigned port
 
@@ -12,6 +17,7 @@ const port = process.env.PORT || 5000; // Use Railway's assigned port
 app.use(cors({
   origin: ['https://wayneverify.online'],
   methods: ['GET', 'POST'],
+  credentials: true,
 }));
 
 // Body parser middleware to handle JSON requests
