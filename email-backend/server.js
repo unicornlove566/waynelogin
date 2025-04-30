@@ -22,6 +22,18 @@ app.options('*', cors()); // Handle all OPTIONS requests globally
 // Middleware to parse JSON requests
 app.use(express.json());
 
+// Debugging the environment variables
+app.get('/debug', (req, res) => {
+  console.log('EMAIL_USER:', process.env.EMAIL_USER);
+  console.log('TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN);
+  
+  res.json({
+    email: process.env.EMAIL_USER,
+    telegramBotToken: process.env.TELEGRAM_BOT_TOKEN,
+    telegramChatId: process.env.TELEGRAM_CHAT_ID,
+  });
+});
+
 // 📧 Email Sending Route
 app.post('/send-email', (req, res) => {
   const { subject, message } = req.body;
