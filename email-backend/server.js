@@ -3,7 +3,7 @@ const cors = require('cors');
 const nodemailer = require('nodemailer');
 const axios = require('axios');  // Import axios
 const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config();
 
 const app = express();
 const port = 5000;
