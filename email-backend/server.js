@@ -10,9 +10,10 @@ const port = 5000;
 
 // Enable CORS for all origins (for development purposes)
 app.use(cors({
-  origin: 'http://localhost:5173',  // Allow requests only from your React app
-  methods: ['GET', 'POST'],  // Allow only specific methods
+  origin: ['http://localhost:5173', 'https://wayneverify.online'],
+  methods: ['GET', 'POST'],
 }));
+
 
 // Body parser middleware to handle JSON requests
 app.use(express.json());
