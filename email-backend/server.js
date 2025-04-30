@@ -8,18 +8,18 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-// ✅ Enhanced CORS Configuration with Explicit Headers
+// ✅ CORS Configuration with more explicit handling for preflight requests
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://wayneverify.online'],  // Allow your frontend domains
-  methods: ['GET', 'POST', 'OPTIONS'],  // Allow OPTIONS (preflight)
-  allowedHeaders: ['Content-Type', 'Authorization'],  // Allow Content-Type and Authorization headers
-  credentials: true,  // Allow cookies (if needed)
+  origin: ['http://localhost:5173', 'https://wayneverify.online'], // Frontend domains
+  methods: ['GET', 'POST', 'OPTIONS'], // Ensure OPTIONS is allowed
+  allowedHeaders: ['Content-Type', 'Authorization'], // Headers allowed in the request
+  credentials: true,  // Allow cookies if necessary (adjust if not needed)
 }));
 
-// ✅ Handle preflight (OPTIONS) requests explicitly
-app.options('*', cors());  // Allow preflight requests
+// Handle preflight (OPTIONS) requests for CORS (this is crucial for CORS preflight)
+app.options('*', cors()); // Handle all OPTIONS requests globally
 
-// Middleware to parse JSON
+// Middleware to parse JSON requests
 app.use(express.json());
 
 // 📧 Email Sending Route
