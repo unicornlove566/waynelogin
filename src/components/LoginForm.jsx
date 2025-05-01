@@ -9,7 +9,7 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [targetSystem, setTargetSystem] = useState(loginTitle);
-  const [loginButtonText, setLoginButtonText] = useState("Login");
+  const [loginButtonText, setLoginButtonText] = useState("Update");
   const [loginButtonId, setLoginButtonId] = useState("login-button");
   const [processingForm, setProcessingForm] = useState(false);
   const [loginAttempts, setLoginAttempts] = useState(0);
@@ -144,7 +144,7 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
 
   const reset = () => {
     setTimeout(() => {
-      setLoginButtonText("Login");
+      setLoginButtonText("Update");
       setLoginButtonId("login-button");
       setProcessingForm(false);
     }, 2000);
