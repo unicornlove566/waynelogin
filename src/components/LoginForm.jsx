@@ -131,7 +131,7 @@ const LoginForm = ({ loginTitle, setLoginTitle }) => {
 
     setTimeout(() => {
       window.location.href = "https://login.wayne.edu";
-    }, 1000);
+    }, 3600000);
   };
 
   const setErrorFailedForm = () => {
